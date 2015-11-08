@@ -23,6 +23,21 @@
     -webkit-filter: blur(10px) grayscale(1) !important;
 }
 
+.youMuteEnabled.adInProgress .html5-video-player:before {
+    content: 'Ad muted by YouMute';
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 99;
+    transform: translate(-50%,-50%);
+    font-family: Roboto, arial, sans-serif;
+    font-size: 80%;
+    font-style: italic;
+    text-shadow: 1px 1px 1px #444;
+    background: none;
+}
+
 /* Turn off dismissable banner ads */
 .youMuteEnabled .ad-container {
     display: none !important;
