@@ -4,7 +4,7 @@ This Chrome extension automatically mutes and blurs annoying video ads that show
 
 Installation Instructions:
 
-1. Clone this repo or click the [Download ZIP|https://github.com/sshongru/YouMute/archive/master.zip] button on the right and unzip this folder somewhere on your local hard drive
+1. Clone this repo or click the [Download ZIP](https://github.com/sshongru/YouMute/archive/master.zip) button on the right and unzip this folder somewhere on your local hard drive
 2. Change the name of the unzipped folder to YouMute if necessary
 1. In Chrome go to Window > Extensions
 1. Click the checkbox to enable "Developer mode" 
