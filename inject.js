@@ -7,20 +7,31 @@ function YouMute(){
     this.interval = null;
     this.enabledClassName = 'youMuteEnabled';
     this.adInProgressClassName = 'adInProgress';
-    this.videoEle = document.getElementsByClassName( 'html5-main-video' )[ 0 ];
-    this.bodyClassList = document.body.classList;
+    this.htmlClassList = document.body.parentElement.classList;
 }
 
 YouMute.prototype.setup = function(){
+    console.log( 'YouMute setup' );
     this.checkForAd = this.checkForAd.bind( this );
     this.interval = setInterval( this.checkForAd, 100 );
-    this.bodyClassList.add( this.enabledClassName );
+    this.htmlClassList.add( this.enabledClassName );
 }
 
 YouMute.prototype.teardown = function(){
+    console.log( 'YouMute teardown' );
     this.adEnded();
     clearInterval( this.interval );
-    this.bodyClassList.remove( this.enabledClassName );
+    this.htmlClassList.remove( this.enabledClassName );
+}
+
+YouMute.prototype.getVideoElement = function(){
+    // Cache the video element so we don't have to look it up on every tick.
+    // YouTube might remove the element when navigating between videos so
+    // make sure we look for the latest if it doesn't exist.
+    if ( !this.videoEle ){
+        this.videoEle = document.getElementsByClassName( 'html5-main-video' )[ 0 ];
+    }
+    return this.videoEle;
 }
 
 YouMute.prototype.checkForAd = function( event ){
@@ -40,7 +51,7 @@ YouMute.prototype.checkForAd = function( event ){
 }
 
 YouMute.prototype.adInProgress = function(){
-    this.videoEle.muted = true;
+    this.getVideoElement().muted = true;
 
     // keep trying to press the Skip Ad button
     var skipButton = document.getElementsByClassName( 'videoAdUiSkipButton' )[ 0 ];
@@ -48,12 +59,14 @@ YouMute.prototype.adInProgress = function(){
         skipButton.click();
     }
 
-    this.bodyClassList.add( this.adInProgressClassName );
+    this.htmlClassList.add( this.adInProgressClassName );
 }
 
 YouMute.prototype.adEnded = function(){
-    this.videoEle.muted = false;
-    this.bodyClassList.remove( this.adInProgressClassName );
+    this.getVideoElement().muted = false;
+
+    this.htmlClassList.remove( this.adInProgressClassName );
 }
 
 var youMute = new YouMute();
+youMute.setup();

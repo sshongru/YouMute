@@ -21,6 +21,6 @@
         }
     ],
     "browser_action": {
-        "default_title": "Mute YouTube Ads"
+        "default_title": "Toggle YouMute"
     }
 }

@@ -1,4 +1,4 @@
-var enabled = false;
+var enabled = true;
 
 // Toggle YouMute functionality on/off when the user clicks 
 // on the extension button in the toolbar.

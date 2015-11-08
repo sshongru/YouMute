@@ -1,15 +1,19 @@
-.youMuteEnabled {
+.youMuteEnabled body {
     background: #8C0000 !important;
 }
 
 .youMuteEnabled:before {
     content: 'YouMute Enabled';
+    font-family: Roboto, arial, sans-serif;
+    font-size: 80%;
+    text-align: center;
     display: block;
     position: fixed;
     left: 0;
     bottom: 0;
+    width: 100%;
     padding: 8px 12px;
-    background: red;
+    background: #BC0000;
     color: white;
     z-index: 100;
 }
