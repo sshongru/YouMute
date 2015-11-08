@@ -1,0 +1,30 @@
+.youMuteEnabled {
+    background: #8C0000 !important;
+}
+
+.youMuteEnabled:before {
+    content: 'YouMute Enabled';
+    display: block;
+    position: fixed;
+    left: 0;
+    bottom: 0;
+    padding: 8px 12px;
+    background: red;
+    color: white;
+    z-index: 100;
+}
+
+/* Blur video ads while they are muted */
+.youMuteEnabled.adInProgress video {
+    -webkit-filter: blur(10px) grayscale(1) !important;
+}
+
+/* Turn off dismissable banner ads */
+.youMuteEnabled .ad-container {
+    display: none !important;
+}
+
+/* Turn off those silly clickable annotations */
+.youMuteEnabled .html5-video-content .video-annotations {
+    display: none !important;
+}
