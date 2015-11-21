@@ -47,3 +47,8 @@
 .youMuteEnabled .html5-video-content .video-annotations {
     display: none !important;
 }
+
+/* Turn off author's suggested next video and subscribe button annotations */
+.youMuteEnabled .annotation {
+    display: none !important;
+}
