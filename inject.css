@@ -1,29 +1,26 @@
-.youMuteEnabled body {
-    background: #8C0000 !important;
-}
-
-.youMuteEnabled:before {
+html:before {
     content: 'YouMute Enabled';
     font-family: Roboto, arial, sans-serif;
-    font-size: 80%;
+    font-size: 60%;
     text-align: center;
     display: block;
     position: fixed;
     left: 0;
     bottom: 0;
-    width: 100%;
+    width: 80px;
     padding: 8px 12px;
-    background: #BC0000;
+    background: rgba(0,0,0,0.5);
     color: white;
+    text-shadow: 1px 1px 1px #444;
     z-index: 100;
 }
 
 /* Blur video ads while they are muted */
-.youMuteEnabled.adInProgress video {
+.muteAdsEnabled.adInProgress video {
     -webkit-filter: blur(10px) grayscale(1) !important;
 }
 
-.youMuteEnabled.adInProgress .html5-video-player:before {
+.muteAdsEnabled.adInProgress .html5-video-player:before {
     content: 'Ad muted by YouMute';
     display: block;
     position: absolute;
@@ -39,16 +36,16 @@
 }
 
 /* Turn off dismissable banner ads */
-.youMuteEnabled .ad-container {
+.hideBannerAdsEnabled .ad-container {
     display: none !important;
 }
 
 /* Turn off those silly clickable annotations */
-.youMuteEnabled .html5-video-content .video-annotations {
+.hideAnnotationsEnabled .html5-video-content .video-annotations {
     display: none !important;
 }
 
 /* Turn off author's suggested next video and subscribe button annotations */
-.youMuteEnabled .annotation {
+.hideAnnotationsEnabled .annotation {
     display: none !important;
 }

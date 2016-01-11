@@ -5,23 +5,54 @@
 function YouMute(){
     this.mutingAd = false;
     this.interval = null;
-    this.enabledClassName = 'youMuteEnabled';
     this.adInProgressClassName = 'adInProgress';
     this.htmlClassList = document.body.parentElement.classList;
 }
 
-YouMute.prototype.setup = function(){
-    console.log( 'YouMute setup' );
+YouMute.prototype.startWatchingForVideoAd = function(){
     this.checkForAd = this.checkForAd.bind( this );
     this.interval = setInterval( this.checkForAd, 100 );
-    this.htmlClassList.add( this.enabledClassName );
 }
 
-YouMute.prototype.teardown = function(){
-    console.log( 'YouMute teardown' );
+YouMute.prototype.stopWatchingForVideoAd = function(){
     this.adEnded();
     clearInterval( this.interval );
-    this.htmlClassList.remove( this.enabledClassName );
+    this.interval = null;
+}
+
+YouMute.prototype.updateSettings = function(){
+    console.log( 'Update YouMute Settings' );
+    var outer = this;
+
+    // ask background.js for the latest settings values
+    chrome.runtime.sendMessage( null, { name: 'getSettings' }, null, function( response ){
+        if ( response ){
+            var settings = JSON.parse( response );
+
+            for ( var i = 0, l = settings.length; i < l; i++ ){
+                var setting = settings[ i ];
+
+                if ( setting.value == 'true' ){
+                    outer.htmlClassList.add( setting.key );
+                } else {
+                    outer.htmlClassList.remove( setting.key );
+                }
+
+                // setup/teardown the logic that watches for video ads to mute
+                if ( setting.key == 'muteAdsEnabled' ){
+                    if ( setting.value == 'true' ){
+                        if ( !outer.interval ){
+                            outer.startWatchingForVideoAd();
+                        }
+                    } else {
+                        if ( outer.interval ){
+                            outer.stopWatchingForVideoAd();
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 YouMute.prototype.getVideoElement = function(){
@@ -69,4 +100,4 @@ YouMute.prototype.adEnded = function(){
 }
 
 var youMute = new YouMute();
-youMute.setup();
+youMute.updateSettings();
