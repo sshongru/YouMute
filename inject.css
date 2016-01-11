@@ -1,4 +1,4 @@
-html:before {
+html.muteAdsEnabled:before {
     content: 'YouMute Enabled';
     font-family: Roboto, arial, sans-serif;
     font-size: 60%;
