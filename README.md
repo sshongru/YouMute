@@ -4,7 +4,8 @@ This Chrome extension automatically mutes and blurs annoying video ads that show
 
 Installation Instructions:
 
-1. Clone this repo to somewhere on your local hard drive
+1. Clone this repo or click the [Download ZIP](https://github.com/sshongru/YouMute/archive/master.zip) button on the right and unzip this folder somewhere on your local hard drive
+2. Change the name of the unzipped folder to YouMute if necessary
 1. In Chrome go to Window > Extensions
 1. Click the checkbox to enable "Developer mode" 
 1. Click the "Load Unpacked Extension" button
@@ -12,6 +13,5 @@ Installation Instructions:
 
 Usage Instructions:
 
-- When you are on a YouTube.com page click the YouMute button to the right of the address bar to turn it on.
-- Clicking the button again will turn YouMute off in case you want to see the blocked content again.
-- Notice the background color of YouTube.com will look red when this mode is enabled.
+- You will notice a red background color on YouTube.com when YouMute is enabled.
+- To temporarily turn off YouMute click the icon to the right of the address bar.  Clicking that button again will turn it on again.
