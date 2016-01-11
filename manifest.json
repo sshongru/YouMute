@@ -1,6 +1,6 @@
 {
-    "name": "YouMute", /* max 45 characters */
-    "short_name": "YouMute", /* max 12 characters */
+    "name": "YouMute",
+    "short_name": "YouMute",
     "description": "Automatically mute and skip YouTube™ video ads",
     "version": "0.1.1",
     "manifest_version": 2,
