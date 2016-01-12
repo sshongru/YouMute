@@ -41,7 +41,7 @@ html.muteAdsEnabled:before {
 }
 
 /* Turn off those silly clickable annotations */
-.hideAnnotationsEnabled .html5-video-content .video-annotations {
+.hideAnnotationsEnabled .video-annotations {
     display: none !important;
 }
 
