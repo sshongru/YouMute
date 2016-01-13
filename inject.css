@@ -46,6 +46,7 @@ html.muteAdsEnabled:before {
 }
 
 /* Turn off author's suggested next video and subscribe button annotations */
+.hideAnnotationsEnabled .ytp-cards-teaser,
 .hideAnnotationsEnabled .annotation {
     display: none !important;
 }
