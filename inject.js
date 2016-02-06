@@ -65,6 +65,26 @@ YouMute.prototype.getVideoElement = function(){
     return this.videoEle;
 }
 
+YouMute.prototype.getRemainingTime = function(){
+    var videoAdUiPreSkipText = document.getElementsByClassName( 'videoAdUiPreSkipText' )[ 0 ];
+    var remainingTime = 0;
+
+    if ( !videoAdUiPreSkipText ){
+        // can't skip this ad so grab how many seconds are left in it
+        var videoAdUiAttribution = document.getElementsByClassName( 'videoAdUiAttribution' )[ 0 ];
+        var parts = videoAdUiAttribution.innerText.split( ' ' ).pop().split( ':' );
+        var minutes = parts[ 0 ];
+        var seconds = parts[ 1 ];
+
+        remainingTime = ( 60 * parseInt( minutes ) ) + parseInt( seconds );
+    } else {
+        // can skip this ad so grab how many seconds until you can click the Skip Ad button
+        remainingTime = videoAdUiPreSkipText.innerText.split( ' ' ).pop();
+    }
+
+    return remainingTime;
+}
+
 YouMute.prototype.checkForAd = function( event ){
     var ad = document.getElementsByClassName( 'ad-interrupting' )[ 0 ];
 
@@ -83,6 +103,16 @@ YouMute.prototype.checkForAd = function( event ){
 
 YouMute.prototype.adInProgress = function(){
     this.getVideoElement().muted = true;
+
+    // show the time remaining before the ad can be skipped
+    var player = document.getElementsByClassName( 'html5-video-player' )[ 0 ];
+    var remainingTime = this.getRemainingTime();
+
+    if ( isNaN( remainingTime ) ){
+        remainingTime = '';
+    }
+
+    player.setAttribute( 'data-timeRemaining', remainingTime );
 
     // keep trying to press the Skip Ad button
     var skipButton = document.getElementsByClassName( 'videoAdUiSkipButton' )[ 0 ];

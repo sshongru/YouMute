@@ -35,6 +35,22 @@ html.muteAdsEnabled:before {
     background: none;
 }
 
+.muteAdsEnabled.adInProgress .html5-video-player:after {
+    content: attr(data-timeRemaining);
+    display: block;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    z-index: 99;
+    transform: translate(-50%,-150%);
+    font-family: Roboto, arial, sans-serif;
+    font-size: 200%;
+    font-weight: bold;
+    font-style: italic;
+    text-shadow: 1px 1px 1px #444;
+    background: none;
+}
+
 /* Turn off dismissable banner ads */
 .hideBannerAdsEnabled .ad-container {
     display: none !important;
