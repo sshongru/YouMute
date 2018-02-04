@@ -27,12 +27,12 @@ YouMute.prototype.updateSettings = function(){
     // ask background.js for the latest settings values
     chrome.runtime.sendMessage( null, { name: 'getSettings' }, null, function( response ){
         if ( response ){
-            var settings = JSON.parse( response );
+            var settings = response;
 
             for ( var i = 0, l = settings.length; i < l; i++ ){
                 var setting = settings[ i ];
 
-                if ( setting.value == 'true' ){
+                if ( setting.value === true ){
                     outer.htmlClassList.add( setting.key );
                 } else {
                     outer.htmlClassList.remove( setting.key );
@@ -40,7 +40,7 @@ YouMute.prototype.updateSettings = function(){
 
                 // setup/teardown the logic that watches for video ads to mute
                 if ( setting.key == 'muteAdsEnabled' ){
-                    if ( setting.value == 'true' ){
+                    if ( setting.value === true ){
                         if ( !outer.interval ){
                             outer.startWatchingForVideoAd();
                         }

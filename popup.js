@@ -2,32 +2,59 @@
 function updateSetting( event ){
     // tell background.js to save the new setting value
     var target = event.target;
-    chrome.runtime.sendMessage( null, { name: 'updateSetting', settingKey: target.name, settingValue: target.checked });
+    var message = { name: 'updateSetting', settingKey: target.name, settingValue: target.checked };
+    chrome.runtime.sendMessage( null, message );
+}
+
+function createBooleanField( setting ){
+    var div = document.createElement( 'div' );
+    div.className = 'setting';
+
+    var input = document.createElement( 'input' );
+    input.type = 'checkbox';
+    input.name = setting.key;
+    input.id = setting.key;
+    input.checked = setting.value;
+    input.addEventListener( 'change', updateSetting );
+
+    var label = document.createElement( 'label' );
+    label.setAttribute( 'for', setting.key );
+    label.textContent = setting.title;
+
+    var p = document.createElement( 'p' );
+    p.textContent = setting.desc;
+    
+    div.appendChild( input );
+    div.appendChild( label );
+    div.appendChild( p );
+
+    return div;
+}
+
+function createEnumField( setting ){
+    // TODO
 }
 
 // get the list of settings when the popup is first shown
 chrome.runtime.sendMessage( null, { name: 'getSettings' }, null, function( response ){
     if ( response ){
-        var settings = JSON.parse( response );
+        var settings = response;
+        var settingsDiv = document.getElementById( 'settings' );
 
         for ( var i = 0; i < settings.length; i++ ){
             var setting = settings[ i ];
-            var checked = ( setting.value == 'true' ) ? 'checked' : '';
+            var field;
 
-            var s = '';
-            s += '<div class="setting">';
-            s += '  <input type="checkbox" name="' + setting.key + '" id="' + setting.key + '" ' + checked + '>';
-            s += '  <label for="' + setting.key + '">' + setting.title + '</label>';
-            s += '  <p>' + setting.desc + '</p>';
-            s += '</div>';
+            switch ( setting.type ){
+                case 'boolean':
+                    field = createBooleanField( setting );
+                    break;
+                case 'enum':
+                    field = createEnumField( setting );
+                    break;
+            }
 
-            document.getElementById( 'settings' ).innerHTML += s;
-        }
-
-        var checkboxes = document.querySelectorAll( '.setting input' );
-
-        for ( var i = 0; i < checkboxes.length; i++ ){
-            checkboxes[ i ].addEventListener( 'change', updateSetting );
+            settingsDiv.appendChild( field );
         }
     }
 });
