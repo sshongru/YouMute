@@ -6,6 +6,13 @@ function YouMute(){
     this.mutingAd = false;
     this.interval = null;
     this.adInProgressClassName = 'adInProgress';
+    this.adVolume = 0;
+
+// TODO:  rename to minimumAdDurationBeforeSkip?
+    this.autoSkipWaitTime = 0;
+
+    // TODO: Iss this still needed?
+    this.adStartTime = null;
     this.htmlClassList = document.body.parentElement.classList;
 }
 
@@ -50,6 +57,19 @@ YouMute.prototype.updateSettings = function(){
                         }
                     }
                 }
+
+                if ( setting.key == 'adVolume' ){
+                    var volume = parseInt( setting.value );
+                    if ( isNaN( volume ) ){
+                        volume = 0;
+                    }
+                    outer.adVolume = volume / 100;
+                }
+
+                if ( setting.key == 'autoSkipWaitTime' ){
+                    var skipTime = parseInt( setting.value );
+                    outer.autoSkipWaitTime = skipTime;
+                }
             }
         }
     });
@@ -65,24 +85,85 @@ YouMute.prototype.getVideoElement = function(){
     return this.videoEle;
 }
 
+
+/*
+ * Returns the amount of time required by YouTube before skipping
+ */
 YouMute.prototype.getRemainingTime = function(){
     var videoAdUiPreSkipText = document.getElementsByClassName( 'videoAdUiPreSkipText' )[ 0 ];
     var remainingTime = 0;
 
     if ( !videoAdUiPreSkipText ){
         // can't skip this ad so grab how many seconds are left in it
-        var videoAdUiAttribution = document.getElementsByClassName( 'videoAdUiAttribution' )[ 0 ];
-        var parts = videoAdUiAttribution.innerText.split( ' ' ).pop().split( ':' );
-        var minutes = parts[ 0 ];
-        var seconds = parts[ 1 ];
-
-        remainingTime = ( 60 * parseInt( minutes ) ) + parseInt( seconds );
+        var adDurationRemainingElement = document.getElementsByClassName( 'ytp-ad-duration-remaining' )[ 0 ];
+        remainingTime = this.convertTimeToSeconds( adDurationRemainingElement.innerText );
     } else {
         // can skip this ad so grab how many seconds until you can click the Skip Ad button
         remainingTime = videoAdUiPreSkipText.innerText.split( ' ' ).pop();
+        // TODO: Need to convert to int??
     }
 
+    console.log( 'getRemainingTime', remainingTime );
+
     return remainingTime;
+}
+
+YouMute.prototype.getRemainingWaitTime = function(){
+    var durationElement = document.getElementsByClassName( 'ytp-time-duration' )[ 0 ];
+    var duration = this.convertTimeToSeconds( durationElement.innerText );
+
+    var adDurationRemainingElement = document.getElementsByClassName( 'ytp-ad-duration-remaining' )[ 0 ];
+    var adElapsedSeconds = duration - this.convertTimeToSeconds( adDurationRemainingElement.innerText );
+
+    if ( this.autoSkipWaitTime < adElapsedSeconds ){
+        return this.getRemainingTime();
+    } else {
+        return this.autoSkipWaitTime - adElapsedSeconds;
+    }
+}
+
+// TODO: Can we kill this off in favor of getRemwaittitme?
+YouMute.prototype.sufficientWaitTimeHasElapsed = function(){
+    var adElapsedElement = document.getElementsByClassName( 'ytp-time-current' )[ 0 ];
+    var adElapsedSeconds = this.convertTimeToSeconds( adElapsedElement.textContent );
+
+    if ( adElapsedSeconds > this.autoSkipWaitTime ){
+        return true;
+    }
+    return false;
+}
+
+/*
+ * Returns a number between 0 and 1 that represents a volume percentage
+ */
+YouMute.prototype.getNormalVolume = function(){
+    var volumePanel = document.querySelector( '.ytp-volume-panel' );
+    var volumeText = volumePanel.getAttribute( 'aria-valuetext' ); // looks like '10% volume muted'
+    
+    var muted = volumeText.indexOf( 'muted' ) >= 0;
+    var percentRegex = /([0-9.]+)%/;
+    var found = volumeText.match( percentRegex );
+    var volumeLevel = parseInt( found[ 1 ] ); // captured regex value
+    
+    if ( isNaN( volumeLevel ) ){
+        volumeLevel = 100;
+    }
+
+    if ( muted ){
+        volumeLevel = 0;
+    }
+
+    return volumeLevel / 100;
+}
+
+/*
+ * Converts a string in the format of MM:SS (ex: "01:35") to the number of seconds
+ */
+YouMute.prototype.convertTimeToSeconds = function( timeString ){
+    var parts = timeString.split( ':' );
+    var seconds = ( 60 * parseInt( parts[ 0 ] ) ) + parseInt( parts[ 1 ] );
+    console.log( 'convertTimeToSeconds', timeString, seconds );
+    return seconds;
 }
 
 YouMute.prototype.checkForAd = function( event ){
@@ -102,30 +183,39 @@ YouMute.prototype.checkForAd = function( event ){
 }
 
 YouMute.prototype.adInProgress = function(){
-    this.getVideoElement().muted = true;
+
+    // track the start time
+    if ( !this.adStartTime ){
+        this.adStartTime = Date.now();
+    }
+
+    this.getVideoElement().volume = this.adVolume;
 
     // show the time remaining before the ad can be skipped
     var player = document.getElementsByClassName( 'html5-video-player' )[ 0 ];
-    var remainingTime = this.getRemainingTime();
+    var remainingTime = this.getRemainingWaitTime();
 
     if ( isNaN( remainingTime ) ){
-        remainingTime = '';
+        remainingTime = 0;
     }
 
-    player.setAttribute( 'data-timeRemaining', remainingTime );
+    player.setAttribute( 'data-timeRemaining', remainingTime || '' );
 
-    // keep trying to press the Skip Ad button
-    var skipButton = document.getElementsByClassName( 'videoAdUiSkipButton' )[ 0 ];
-    if ( skipButton ){
-        skipButton.click();
+    // only auto click after wait time has elapsed
+    if ( remainingTime <= 0 ){
+        // keep trying to press the "Skip Ad" button
+        var skipButton = document.getElementsByClassName( 'videoAdUiSkipButton' )[ 0 ];
+        if ( skipButton ){
+            skipButton.click();
+        }
     }
 
     this.htmlClassList.add( this.adInProgressClassName );
 }
 
 YouMute.prototype.adEnded = function(){
-    this.getVideoElement().muted = false;
-
+    this.adStartTime = null;
+    this.getVideoElement().volume = this.getNormalVolume();
     this.htmlClassList.remove( this.adInProgressClassName );
 }
 
