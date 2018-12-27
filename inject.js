@@ -71,7 +71,7 @@ YouMute.prototype.getRemainingTime = function(){
 
     if ( !videoAdUiPreSkipText ){
         // can't skip this ad so grab how many seconds are left in it
-        var videoAdUiAttribution = document.getElementsByClassName( 'videoAdUiAttribution' )[ 0 ];
+        var videoAdUiAttribution = document.getElementsByClassName( 'ytp-ad-duration-remaining' )[ 0 ];
         var parts = videoAdUiAttribution.innerText.split( ' ' ).pop().split( ':' );
         var minutes = parts[ 0 ];
         var seconds = parts[ 1 ];
@@ -115,7 +115,7 @@ YouMute.prototype.adInProgress = function(){
     player.setAttribute( 'data-timeRemaining', remainingTime );
 
     // keep trying to press the Skip Ad button
-    var skipButton = document.getElementsByClassName( 'videoAdUiSkipButton' )[ 0 ];
+    var skipButton = document.getElementsByClassName( 'ytp-ad-skip-button' )[ 0 ];
     if ( skipButton ){
         skipButton.click();
     }
