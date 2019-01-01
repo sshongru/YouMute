@@ -2,14 +2,13 @@
     "name": "YouMute",
     "short_name": "YouMute",
     "description": "Automatically mute and skip YouTube™ video ads",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "manifest_version": 2,
     "icons": {
         "128": "logo.png"
     },
     "permissions": [
         "activeTab",
-        "tabs",
         "storage"
     ],
     "background": {

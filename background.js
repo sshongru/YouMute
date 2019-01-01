@@ -67,24 +67,16 @@ loadStorageData().then(function( storageData ){
 
             saveStorageData();
 
-            chrome.tabs.query( {}, function ( tabs ) {
-                var manifest = chrome.runtime.getManifest();
-                var validInjectURL = manifest.content_scripts[ 0 ].matches[ 0 ].slice( 0, -1 );
-
-                // update settings on relevant tabs
-                for ( var i = 0; i < tabs.length; i++ ){
-                    var tab = tabs [ i ];
-
-                    if ( tab.url.indexOf( validInjectURL ) === 0 ){
-                        chrome.tabs.executeScript( tab.id, { code: 'if ( youMute ){ youMute.updateSettings(); }' }, function( result ){
-                            var lastError = chrome.runtime.lastError;
-                            if ( lastError ){
-                                console.error( lastError );
-                            }
-                        });
-                    }
-                }
-            });
+            // This was temporarily changed to chrome.tabs.query to apply the settings across
+            // every open tab. That was nice for keeping settings in sync across tabs, but
+            // unfortunately it required the `tabs` permission to operate successfully. This
+            // permsion comes across to the user as "Read your browsing history".
+            //
+            // That felt too intrusive for what is likely a pretty big edge case of updating
+            // settings while having multiple tabs open. If users do have that situation they
+            // will have to refresh each tab after making a settings change.
+            //
+            chrome.tabs.executeScript( { code: 'youMute.updateSettings();' } );
         }
     });
 });
