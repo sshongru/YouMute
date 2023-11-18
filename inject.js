@@ -60,35 +60,42 @@ YouMute.prototype.getVideoElement = function(){
     // YouTube might remove the element when navigating between videos so
     // make sure we look for the latest if it doesn't exist.
     if ( !this.videoEle ){
-        this.videoEle = document.getElementsByClassName( 'html5-main-video' )[ 0 ];
+        this.videoEle = document.querySelectorAll( '.video-stream.html5-main-video' )[ 0 ];
     }
     return this.videoEle;
 }
 
 YouMute.prototype.getRemainingTime = function(){
-    var videoAdUiPreSkipText = document.getElementsByClassName( 'videoAdUiPreSkipText' )[ 0 ];
+    var videoAdUiPreSkipText = document.getElementsByClassName( 'ytp-ad-preview-text-modern' )[ 0 ];
     var remainingTime = 0;
 
-    if ( !videoAdUiPreSkipText ){
-        // can't skip this ad so grab how many seconds are left in it
-        var videoAdUiAttribution = document.getElementsByClassName( 'ytp-ad-duration-remaining' )[ 0 ];
-        var parts = videoAdUiAttribution.innerText.split( ' ' ).pop().split( ':' );
-        var minutes = parts[ 0 ];
-        var seconds = parts[ 1 ];
+    if ( videoAdUiPreSkipText ){
+        let number = parseInt( videoAdUiPreSkipText.innerText );
 
-        remainingTime = ( 60 * parseInt( minutes ) ) + parseInt( seconds );
-    } else {
-        // can skip this ad so grab how many seconds until you can click the Skip Ad button
-        remainingTime = videoAdUiPreSkipText.innerText.split( ' ' ).pop();
+        if ( isNaN(number) ){
+            let videoAdUiAttribution = document.getElementsByClassName( 'ytp-ad-duration-remaining' )[ 0 ];
+
+            if ( videoAdUiAttribution ){
+                var parts = videoAdUiAttribution.innerText.split( ' ' ).pop().split( ':' );
+                var minutes = parts[ 0 ];
+                var seconds = parts[ 1 ];
+
+                remainingTime = ( 60 * parseInt( minutes ) ) + parseInt( seconds );
+            } else {
+                remainingTime = -1; // unknown time left
+            }
+        } else {
+            remainingTime = number;
+        }
     }
 
     return remainingTime;
 }
 
 YouMute.prototype.checkForAd = function( event ){
-    var ad = document.getElementsByClassName( 'ad-interrupting' )[ 0 ];
+    let adButton = document.getElementsByClassName( 'ytp-ad-preview-text-modern' )[ 0 ];
 
-    if ( ad ){
+    if ( adButton ){
         // continuously call this while the ad is up
         this.adInProgress();
         this.mutingAd = true;
@@ -115,7 +122,7 @@ YouMute.prototype.adInProgress = function(){
     player.setAttribute( 'data-timeRemaining', remainingTime );
 
     // keep trying to press the Skip Ad button
-    var skipButton = document.getElementsByClassName( 'ytp-ad-skip-button' )[ 0 ];
+    var skipButton = document.getElementsByClassName( 'ytp-ad-skip-button-modern' )[ 0 ];
     if ( skipButton ){
         skipButton.click();
     }
