@@ -13,7 +13,7 @@ This Chrome extension automatically mutes and blurs annoying video ads that show
 Or download the extension directly from the Chrome Web Store:
 
 <a href="https://chrome.google.com/webstore/detail/youmute/bhlmjoeobnofoajffmnpcahfaffihmbh">
-<img src="https://fonts.gstatic.com/s/i/productlogos/chrome_store/v7/192px.svg" width="30"/> Available in the Chrome Web Store
+<img src="https://fonts.gstatic.com/s/i/productlogos/chrome_store/v7/192px.svg" width="20"/> Available in the Chrome Web Store
 </a>
 
 ## Settings
