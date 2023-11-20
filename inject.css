@@ -52,9 +52,9 @@ html.muteAdsEnabled:before {
 }
 
 /* Turn off dismissable banner ads */
-.hideBannerAdsEnabled .ad-container,
-.hideBannerAdsEnabled .ytp-ad-overlay-container,
-.hideBannerAdsEnabled .ytp-ad-player-overlay {
+.hideBannersEnabled .ad-container,
+.hideBannersEnabled .ytp-ad-overlay-container,
+.hideBannersEnabled .ytp-ad-player-overlay {
     display: none !important;
 }
 
