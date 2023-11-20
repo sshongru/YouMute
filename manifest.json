@@ -2,18 +2,10 @@
     "name": "YouMute",
     "short_name": "YouMute",
     "description": "Automatically mute and skip YouTube\u2122 video ads",
-    "version": "0.1.8",
+    "version": "0.2.0",
     "manifest_version": 3,
     "icons": {
         "128": "logo.png"
-    },
-    "permissions": [
-        "activeTab",
-        "storage",
-        "scripting"
-    ],
-    "background": {
-        "service_worker": "service_worker.js"
     },
     "content_scripts": [
         {
@@ -21,10 +13,5 @@
             "js": [ "inject.js" ],
             "css": [ "inject.css" ]
         }
-    ],
-    "action": {
-        "default_title": "YouMute",
-        "default_popup": "popup.html"
-    },
-    "content_security_policy": {}
+    ]
 }
