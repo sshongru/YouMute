@@ -5,6 +5,6 @@ echo "YouMute"
 echo "-------"
 echo "Packaging ZIP file for Chrome Web Store..."
 
-zip YouMute.zip background.js inject.css inject.js logo.png manifest.json popup.html popup.js
+zip YouMute.zip service_worker.js inject.css inject.js logo.png manifest.json popup.html popup.js
 
 echo "-------"

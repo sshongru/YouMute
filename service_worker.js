@@ -76,7 +76,7 @@ loadStorageData().then(function( storageData ){
             // settings while having multiple tabs open. If users do have that situation they
             // will have to refresh each tab after making a settings change.
             //
-            chrome.tabs.executeScript( { code: 'youMute.updateSettings();' } );
+            chrome.scripting.executeScript( { code: 'youMute.updateSettings();' } );
         }
     });
 });
